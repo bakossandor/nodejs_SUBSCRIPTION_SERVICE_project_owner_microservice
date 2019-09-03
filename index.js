@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const logger = require('logger').createLogger();
@@ -8,7 +10,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.use(router);
+router(app);
 
 app.get('/health', (req, res) => {
   res.sendStatus(200);
@@ -19,7 +21,7 @@ app.all('*', (req, res) => {
   res.status(400).send({'developerMessage': `The ${method} method - ${path} path doesn't exist!`});
 });
 
-app.use('/', (err, req, res) => {
+app.use('/', (err, req, res, next) => {
   logger.error(err);
   res.status(500).send({'developerMessage': 'Internal Server Error'})
 })
