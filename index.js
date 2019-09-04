@@ -22,11 +22,15 @@ app.all('*', (req, res) => {
 });
 
 app.use('/', (err, req, res, next) => {
-  logger.error(err);
-  res.status(500).send({'developerMessage': 'Internal Server Error'})
+  logger.error(err.message);
+  if (!err.statusCode) {
+    err.statusCode = 500;
+    err.message = 'Internal Server Error';
+  }
+  res.status(err.statusCode).send({'developerMessage': err.message})
 })
 
-const port = process.env.PORT ||8001;
+const port = process.env.PORT || 8001;
 app.listen(port, () => {
   logger.info(`The project owner service is listening on port ${port}`);
 })

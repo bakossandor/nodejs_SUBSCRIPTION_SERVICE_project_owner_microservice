@@ -1,11 +1,25 @@
 const { dbAddProjectOwner } = require('../db/index');
+const validateProjectOwner = require('../lib/validate');
 
 async function registerController(req, res, next) {
   try {
-    const { body: { username, email, subscription_type }} = req;
-    const response = await dbAddProjectOwner(username, email, subscription_type);
-    res.send(response);
+    const { body: { username, email, password, subscription_type }} = req;
+    const validationError = validateProjectOwner({username, email, password, subscription_type});
+    if (validationError) {
+      let error = new Error(validationError);
+      error.statusCode = 400;
+      next(error);
+    } 
+    await dbAddProjectOwner(username, email, password, subscription_type);
+    res.status(201).end();
   } catch (error) {
+    // if the error came back from the unique constraint violation
+    if (error.code === '23505') {
+      const uniqeError = new Error(error.detail);
+      uniqeError.statusCode = 400;
+      next(uniqeError);
+      return;
+    }
     next(error);
   }
 }
