@@ -22,11 +22,12 @@ app.all('*', (req, res) => {
 });
 
 app.use('/', (err, req, res, next) => {
-  logger.error(err.message);
-  if (!err.statusCode) {
+  logger.error(err);
+  if (!err.statusCode || !err.message) {
     err.statusCode = 500;
     err.message = 'Internal Server Error';
   }
+  console.log(err.statusCode);
   res.status(err.statusCode).send({'developerMessage': err.message})
 })
 
