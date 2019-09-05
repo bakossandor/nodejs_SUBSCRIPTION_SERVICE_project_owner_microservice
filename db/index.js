@@ -20,14 +20,21 @@ async function dbDeleteProjectOwner (id) {
 }
 
 async function dbGetProjectOwner (id) {
-  const queryString = 'SELECT * FROM "project-owners" where _id = ($1)::uuid'
+  const queryString = 'SELECT _id, username, email, subscription_type FROM "project-owners" where _id = ($1)::uuid';
   const values = [id];
   const response = await pool.query(queryString, values);
-  return response
+  return response;
+}
+
+async function dbGetAllProjectOwner () {
+  const queryString = 'SELECT _id, username, email, subscription_type FROM "project-owners"';
+  const response = await pool.query(queryString);
+  return response;
 }
 
 module.exports = {
   dbAddProjectOwner,
   dbDeleteProjectOwner,
   dbGetProjectOwner,
+  dbGetAllProjectOwner,
 }
