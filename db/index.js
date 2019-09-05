@@ -20,7 +20,7 @@ async function dbDeleteProjectOwner (id) {
 }
 
 async function dbGetProjectOwner (id) {
-  const queryString = 'SELECT _id, username, email, subscription_type FROM "project-owners" where _id = ($1)::uuid';
+  const queryString = 'SELECT _id, username, email, subscription_type FROM "project-owners" WHERE _id = ($1)::uuid';
   const values = [id];
   const response = await pool.query(queryString, values);
   return response;
@@ -32,9 +32,18 @@ async function dbGetAllProjectOwner () {
   return response;
 }
 
+async function dbPatchProjectOwner (update, _id) {
+  const [column, newValue ] = update;
+  const queryString = `UPDATE "project-owners" SET ${column} = $1 WHERE _id = ($2)::uuid`
+  const values = [newValue, _id]
+  const response = await pool.query(queryString, values);
+  return response;
+}
+
 module.exports = {
   dbAddProjectOwner,
   dbDeleteProjectOwner,
   dbGetProjectOwner,
   dbGetAllProjectOwner,
+  dbPatchProjectOwner
 }
