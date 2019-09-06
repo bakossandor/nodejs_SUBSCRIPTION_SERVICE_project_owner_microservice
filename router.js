@@ -1,12 +1,13 @@
 const registerController = require('./controllers/register');
 const unsubscribeController = require('./controllers/unsubscribe');
 const { getProjectOwner, getAllProjectOwner} = require('./controllers/get-project-owner');
-const patchProjectOwnerController = require('./controllers/patch-project-owner');
+const { updatePassword, updateEmail } = require('./controllers/patch-project-owner');
 
 module.exports = (app) => {
-  app.post('/project-owner', registerController);
-  app.delete('/project-owner/:id', unsubscribeController);
   app.get('/project-owner', getAllProjectOwner);
+  app.post('/project-owner', registerController);
   app.get('/project-owner/:id', getProjectOwner);
-  app.patch('/project-owner/:id', patchProjectOwnerController);
+  app.delete('/project-owner/:id', unsubscribeController);
+  app.patch('/project-owner/:id/password', updatePassword);
+  app.patch('/project-owner/:id/email', updateEmail);
 }

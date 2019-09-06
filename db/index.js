@@ -26,15 +26,27 @@ async function dbGetProjectOwner (id) {
   return response;
 }
 
+async function dbGetUserPassword (id) {
+  const queryString = 'SELECT _id, password FROM "project-owners" WHERE _id = ($1)::uuid';
+  const values = [id];
+  const { rows: [data] } = await pool.query(queryString, values);
+  if (!data) {
+    const message = 'Bad request';
+    const error = new Error(message);
+    error.statusCode = 400;
+    throw error;
+  }
+  return data;
+}
+
 async function dbGetAllProjectOwner () {
   const queryString = 'SELECT _id, username, email, subscription_type FROM "project-owners"';
   const response = await pool.query(queryString);
   return response;
 }
 
-async function dbPatchProjectOwner (update, _id) {
-  const [column, newValue ] = update;
-  const queryString = `UPDATE "project-owners" SET ${column} = $1 WHERE _id = ($2)::uuid`
+async function dbPatchProjectOwner (column, newValue, _id) {
+  const queryString = `UPDATE "project-owners" SET ${column} = $1 WHERE _id = ($2)::uuid RETURNING _id, username, email, subscription_type`
   const values = [newValue, _id]
   const response = await pool.query(queryString, values);
   return response;
@@ -45,5 +57,6 @@ module.exports = {
   dbDeleteProjectOwner,
   dbGetProjectOwner,
   dbGetAllProjectOwner,
-  dbPatchProjectOwner
+  dbPatchProjectOwner,
+  dbGetUserPassword
 }

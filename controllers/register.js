@@ -1,5 +1,5 @@
 const { dbAddProjectOwner } = require('../db/index');
-const validateProjectOwner = require('../lib/validate');
+const { validateProjectOwner } = require('../lib/validate');
 
 async function registerController(req, res, next) {
   try {
