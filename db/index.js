@@ -6,8 +6,8 @@ const { encryptPassword } = require('../lib/encrypt');
 
 async function dbAddProjectOwner (username, email, password, subscription_type) {
   const hashedPassword = await encryptPassword(password);
-  const queryString = 'INSERT into "project-owners" (_id, username, email, password, subscription_type) VALUES ($1, $2, $3, $4, $5)';
-  const values = [uuidv1(), username, email, hashedPassword, subscription_type];
+  const queryString = 'INSERT into "project-owners" (_id, username, email, password, subscription_type, access_level) VALUES ($1, $2, $3, $4, $5, $6)';
+  const values = [uuidv1(), username, email, hashedPassword, subscription_type, 1];
   const response = await pool.query(queryString, values);
   return response;
 }

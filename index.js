@@ -21,7 +21,7 @@ app.all('*', (req, res) => {
 });
 
 app.use('/', (err, req, res, next) => {
-  console.log(err.message);
+  console.error(err.message);
   if (!err.statusCode) {
     err.statusCode = 500;
     err.message = 'Internal Server Error';

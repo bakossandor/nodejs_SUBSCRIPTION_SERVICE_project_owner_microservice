@@ -4,10 +4,10 @@ const { getProjectOwner, getAllProjectOwner} = require('./controllers/get-projec
 const { updatePassword, updateEmail } = require('./controllers/patch-project-owner');
 
 module.exports = (app) => {
-  app.get('/project-owner', getAllProjectOwner);
-  app.post('/project-owner', registerController);
-  app.get('/project-owner/:id', getProjectOwner);
-  app.delete('/project-owner/:id', unsubscribeController);
-  app.patch('/project-owner/:id/password', updatePassword);
-  app.patch('/project-owner/:id/email', updateEmail);
+  app.get('/', getAllProjectOwner);
+  app.post('/', registerController);
+  app.get('/:id', getProjectOwner);
+  app.delete('/:id', unsubscribeController);
+  app.patch('/:id/password', updatePassword);
+  app.patch('/:id/email', updateEmail);
 }
